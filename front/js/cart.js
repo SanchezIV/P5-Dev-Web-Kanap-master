@@ -203,7 +203,7 @@ function remove(e) {
       articlesStorage.splice(removeTarget.index, 1);
       localStorage.setItem("articles", JSON.stringify(articlesStorage))
       removeClosest.remove();
-      location.reload();  
+      location.reload();
     }
   }
 };
