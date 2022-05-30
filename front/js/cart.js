@@ -274,9 +274,10 @@ let erroraddress = document.getElementById("addressErrorMsg")
 let errorcity = document.getElementById("cityErrorMsg")
 let erroremail = document.getElementById("emailErrorMsg")
 
-//implantation du RegExp à l'input correspondant
+//implantation du RegExp à l'input correspondant via conditions IF/ELSE
 if(PrenomNomVilleRegExp.test(firstName.value)){
   errorfirstName.innerHTML = "Formulaire valide!"
+  errorfirstName.setAttribute("style", "color:#11D01F");
 }
 else{
   errorfirstName.innerHTML = "Formulaire invalide!";
@@ -286,6 +287,7 @@ else{
 
 if(PrenomNomVilleRegExp.test(lastName.value)){
   errorlastName.innerHTML = "Formulaire valide!"
+  errorlastName.setAttribute("style", "color:#11D01F");
 }
 else{
   errorlastName.innerHTML = "Formulaire invalide!";
@@ -295,6 +297,7 @@ else{
 
 if(adresseRegExp.test(address.value)){
   erroraddress.innerHTML = "Formulaire valide!"
+  erroraddress.setAttribute("style", "color:#11D01F");
 }
 else{
   erroraddress.innerHTML = "Formulaire invalide!";
@@ -304,6 +307,7 @@ else{
 
 if(PrenomNomVilleRegExp.test(city.value)){
   errorcity.innerHTML = "Formulaire valide!"
+  errorcity.setAttribute("style", "color:#11D01F");
 }
 else{
   errorcity.innerHTML = "Formulaire invalide!";
@@ -313,6 +317,7 @@ else{
 
 if(emailRegExp.test(email.value)){
   erroremail.innerHTML = "Formulaire valide!"
+  erroremail.setAttribute("style", "color:#11D01F");
 }
 else{
   erroremail.innerHTML = "Formulaire invalide!";
