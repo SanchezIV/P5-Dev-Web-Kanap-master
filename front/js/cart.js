@@ -1,11 +1,18 @@
 let articlesStorage = JSON.parse(localStorage.getItem("articles")); //Je récupère et transforme les données Json du storage en tableau
 console.table(articlesStorage);
-
 let totalProductPrice = 0;
 let totalProductArticle = 0;
 
-//----On parcour le Tableau du LocalStorage------------
-for (let article of articlesStorage){ 
+//----Si article storage est bien un array et si il est vide--------
+if (Array.isArray(articlesStorage) && articlesStorage.length === 0) {
+  emptyCart(); //on appelle la fonction pour le cas "panier vide"
+}
+//----Si il n'y à rien dans le localstorage----
+if (articlesStorage === null) { 
+  emptyCart();    //fonction "panier vide"
+
+} else {//----si il y a des articles dans le localstorage----
+         for (let article of articlesStorage){ 
     let id = article.id // on crée la variable "id" relié a l'id de l'article dans le storage
 
     //-----On se relie à l'api-------------------
@@ -17,16 +24,6 @@ for (let article of articlesStorage){
 
     .then ((product) => { // création d'une fonction pour afficher les infos produit
       
-      //--------si le panier est vide-------
-        if(articlesStorage === null){ 
-            let text = document.createElement("p"); // création varizable text qui crée un élément p en HTML
-            text = `<p>Panier vide !</p>`; // text prend la valeur HTML voulue
-            document.getElementById("cart__items").appendChild(text);// la section "cart__items" se rempli du "text"
-       }
-
-       //-----si il y à déja qqch dans le panier-------
-       else {
-
         //-----création d'un article sous la section-------
            let panier = document.createElement("article"); //création d'un "article" HTML relié a var panier
            panier.className = "cart__item" // on ajoute une class à l'article fraichement créé
@@ -114,12 +111,13 @@ for (let article of articlesStorage){
            deleteItem.textContent = "Supprimer";
           
            deleteItem.addEventListener("click", remove); // création event click sur le bouton Supprimer         
-       };
+      
     })
     .then (() => {
-      let productTotalPrice = document.getElementById("totalPrice")
+      //----On affiche le prix total----
+      let productTotalPrice = document.getElementById("totalPrice") 
       productTotalPrice.innerHTML = totalProductPrice;
-
+      //---on affiche la quantité totale
       let productTotalQuantity = document.getElementById("totalQuantity");
       productTotalQuantity.textContent = totalProductArticle;
     })
@@ -127,9 +125,8 @@ for (let article of articlesStorage){
         alert('error' + err); // en cas d'erreur le site renvoi un message d'alerte
       }); 
 };
-
-
-
+}
+     
   //--------------Modification des quantités via l'input---------------------
 
       //---on configure la fonction de modification des qtt
@@ -137,78 +134,104 @@ for (let article of articlesStorage){
 function priceChange(e) {
 
   const inputTarget = e.target; // variable pour "viser" l'input
-  let inputClosest = inputTarget.closest(".cart__item");// variable pour remonter au parent correspondant à l'input
-  inputClosest.dataset.id === ""; // notre variable prend les valeurs d'id et de couleur de son parent
-  inputClosest.dataset.color === "";
-  inputClosest.value = e.target.value; // notre première variable prend la valeur interieur de l'input
-
-  let totalNombre = 0;
-
-  for (let article of articlesStorage){
-    let id = article.id ;
-    
-    if (inputClosest.dataset.id === article.id && inputClosest.dataset.color === article.color){
-
-      //On stock l'ancien prix
-      let oldPrice = inputClosest.querySelector(".price").textContent;
-      console.log(oldPrice);
-      article.quantity = parseInt(inputClosest.value);
-      totalProductArticle = article.quantity;
-      localStorage.setItem("articles", JSON.stringify(articlesStorage));
-
-      fetch(`http://localhost:3000/api/products/${id}`)
-      .then((httpBodyResponse) => {
-        return httpBodyResponse.json(); //on transforme la reponse de l'api au format json
-      })
-
-      .then ((product) => {
-        let getPriceTotal = product.price * totalProductArticle;
-        let priceTotal = inputClosest.querySelector(".price");
-        priceTotal.innerHTML = getPriceTotal;
-        
-
-        //calcule difference prix
-
-        let difference = getPriceTotal - parseInt(oldPrice);
-        totalProductPrice = totalProductPrice + difference;
-        let productTotalPrice = document.getElementById("totalPrice");
-        productTotalPrice.innerHTML = totalProductPrice;
-        // article.quantity = inputClosest.value;
-        // lastPrice.textContent = article.quantity * product.price;
-
-        // localStorage.setItem("articles", JSON.stringify(articlesStorage));
-      })
-      .catch((err) => {
-        alert('error' + err); // en cas d'erreur le site renvoi un message d'alerte
-      });   
-    };
-    totalNombre = totalNombre + article.quantity
-    console.log(totalNombre);
-  };
-  let totalQuantity = document.getElementById("totalQuantity");
-  totalQuantity.innerHTML = totalNombre;
+  let update = inputTarget.closest(".cart__item");// variable pour remonter au parent correspondant à l'input
+  updateAll(update, "update", e.target.value);// on relie à la fonction "usine"
 };
 
   //---------------CREATION EVENEMENT "OnClick" POUR SUPPRIMER----------------
       // configuration de la fonction supprimer 
 function remove(e) {
   let removeTarget = e.target;
-  let removeClosest = removeTarget.closest(".cart__item");
-  removeClosest.dataset.id ==="";
-  removeClosest.dataset.color === "";
+  let article = removeTarget.closest(".cart__item");
+  updateAll(article, "delete", 0); // on la relie à la fonction "usine"
+};
 
-  for (let article of articlesStorage){
-    if(removeClosest.dataset.id === article.id && removeClosest.dataset.color === article.color){
+//*************Fonction "Usine" pour la MAJ prix/quantité regroupant tous les paramètres de modification des quantités**************/
+let updateAll = (element, type, value) =>{
+  element.dataset.id === "";
+  element.dataset.color === "";
 
-      articlesStorage.splice(removeTarget.index, 1);
-      localStorage.setItem("articles", JSON.stringify(articlesStorage))
-      removeClosest.remove();
-      location.reload();
+  //initialisation d'une var totalnombre à O
+  let totalNombre = 0;
+  //---- On parcour le tableau de storage------
+  for (let [i, article] of articlesStorage.entries()) {
+    let id = article.id ;
+    //---- on cible l'article sélectionné via correspondance de l'id et la couleur-----
+    if (element.dataset.id === article.id && element.dataset.color === article.color){
+
+      //On stock l'ancien prix
+      let oldPrice = element.querySelector(".price").textContent;
+      console.log(oldPrice);
+
+      //on remplace la quantité article par la nouvelle
+      article.quantity = parseInt(value);// on transforme la valeur de la quantité de string à number grace à parseinT
+      totalProductArticle = article.quantity;
+      localStorage.setItem("articles", JSON.stringify(articlesStorage));
+
+      //-----on se relie à l'api en fonction de l'id produit----
+      fetch(`http://localhost:3000/api/products/${id}`)
+      .then((httpBodyResponse) => {
+        return httpBodyResponse.json(); //on transforme la reponse de l'api au format json
+      })
+      //---on récupère la réponse de l'api---
+      .then ((product) => {
+        let getPriceTotal = product.price * totalProductArticle; // on calcule le prix en fonction de la nouvelle quantité
+        let priceTotal = element.querySelector(".price");
+        priceTotal.innerHTML = getPriceTotal;//on injecte le nouveau prix en html
+        
+
+        //--calcule difference prix---
+        let difference = getPriceTotal - parseInt(oldPrice);// avec parseinT on transforme la valeur de string vers nombre
+        //--calcule du total en fonction de la difference entre le total et l'ancien prix--
+        totalProductPrice = totalProductPrice + difference; // prix du total d'articles + la difference
+        let productTotalPrice = document.getElementById("totalPrice");
+        productTotalPrice.innerHTML = totalProductPrice;// on affiche le résultat en HTML
+      })
+      .catch((err) => {
+        alert('error' + err); // en cas d'erreur le site renvoi un message d'alerte
+      });   
+    };
+    //totalnombre prend la valeur de la quantité de l'article
+    totalNombre = totalNombre + article.quantity
+  };
+  let totalQuantity = document.getElementById("totalQuantity");
+  totalQuantity.innerHTML = totalNombre;// on injecte la quantité totale en html
+
+  //----si le le paramètre "type" de updateAll() est le meme que celui de remove()
+  if (type === "delete") {
+    //---on parcour le tableau de storage---
+    for (let [i, article] of articlesStorage.entries()) {
+      console.log(i);
+      //-----on cherche l'article correspondant via l'id et la couleur---
+      if (
+        article.id === element.dataset.id && article.color === element.dataset.color
+      ) {
+        console.log(article);
+        articlesStorage.splice(i, 1);// on supprime l'article du tableau
+        localStorage.setItem("articles", JSON.stringify(articlesStorage));//on met à jour le localStorage()
+        element.remove();//supprime l'element HTML
+        
+      }
+      //si le tableau de storage est bien un tableau et qu'il est vide
+      if (Array.isArray(articlesStorage) && articlesStorage.length === 0){
+        emptyCart();//on appelle la fonction "panier vide"
+ 
+      }
     }
   }
 };
-
-
+//----fonction en cas de panier vide----
+function emptyCart() {
+  let text = document.createElement("p"); // création variable text qui crée un élément p en HTML
+  text.innerHTML = "Panier vide !"; // text prend la valeur HTML voulue
+  document.getElementById("cart__items").appendChild(text);// la section "cart__items" se rempli du "text"
+  //on affiche 0 dans la quantité totale
+  let videqtt = document.querySelector("#totalQuantity")
+  videqtt.textContent = "0";
+  //on affiche 0 dans le prix total
+  let videPrice = document.querySelector("#totalPrice")
+  videPrice.textContent = "0"
+}
 //*********************LE FORMULAIRE************************/
 //----------RegExp-----------------
 
