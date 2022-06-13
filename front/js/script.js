@@ -11,7 +11,7 @@
       <h3 class="productName">${product.name}</h3>
       <p class="productDescription">${product.description}</p>
     </article>
-  </a>` // on sélectionne la class html a modifier et on remplis avec les infos des "product"
+  </a>` // on sélectionne l'ID' html a modifier et on remplis avec les infos des "product"
     }
   })
   .catch((err) => {

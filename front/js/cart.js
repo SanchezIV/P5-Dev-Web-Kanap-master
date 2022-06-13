@@ -3,7 +3,7 @@ console.table(articlesStorage);
 let totalProductPrice = 0;
 let totalProductArticle = 0;
 
-//----Si article storage est bien un array et si il est vide--------
+//*******On verifie si le LocalStorage est bien un array et vide*********/
 if (Array.isArray(articlesStorage) && articlesStorage.length === 0) {
   emptyCart(); //on appelle la fonction pour le cas "panier vide"
 }
@@ -11,7 +11,8 @@ if (Array.isArray(articlesStorage) && articlesStorage.length === 0) {
 if (articlesStorage === null) { 
   emptyCart();    //fonction "panier vide"
 
-} else {//----si il y a des articles dans le localstorage----
+//**********si il y a des articles dans le localstorage**************/
+} else {
          for (let article of articlesStorage){ 
     let id = article.id // on crée la variable "id" relié a l'id de l'article dans le storage
 
@@ -22,14 +23,15 @@ if (articlesStorage === null) {
         return httpBodyResponse.json(); //on transforme la reponse de l'api au format json
       })
 
-    .then ((product) => { // création d'une fonction pour afficher les infos produit
-      
+    .then ((product) => { //---On récupère la réponse pour l'utiliser 
+
+      //**************Création des élements HTML dynamiques****************/
         //-----création d'un article sous la section-------
            let panier = document.createElement("article"); //création d'un "article" HTML relié a var panier
            panier.className = "cart__item" // on ajoute une class à l'article fraichement créé
            document.getElementById("cart__items").appendChild(panier); // on remplis la section html par le contenu de panier
-           panier.setAttribute("data-id", id); // on ajoute des attributs a l'article
-           panier.setAttribute("data-color", article.color); // ajout du deuxieme attribut a l' "article"
+           panier.setAttribute("data-id", id); // on ajoute des attributs a l'article (ici l'id)
+           panier.setAttribute("data-color", article.color); // ajout du deuxieme attribut a l' "article" (ici la couleur)
 
         //-------création d'une div sous l'article-------------
            let imgArticle = document.createElement("div"); // création d'un élément html "div" relié a la var imgArticles
@@ -85,7 +87,7 @@ if (articlesStorage === null) {
            cartItemContentSettingsQuantity.appendChild(qtt);
            qtt.textContent = "Qté : " //+ `${article.quantity}`; // on insère la couleur stocké dans le localStorage
 
-           //------ création d'un input dans la div cart__item__content__settings__quantity ------
+           //***********création d'un input dans la div cart__item__content__settings__quantity*******
            let itemQuantity = document.createElement("input");
            cartItemContentSettingsQuantity.appendChild(itemQuantity);
 
@@ -111,13 +113,12 @@ if (articlesStorage === null) {
            deleteItem.textContent = "Supprimer";
           
            deleteItem.addEventListener("click", remove); // création event click sur le bouton Supprimer         
-      
     })
     .then (() => {
-      //----On affiche le prix total----
-      let productTotalPrice = document.getElementById("totalPrice") 
-      productTotalPrice.innerHTML = totalProductPrice;
-      //---on affiche la quantité totale
+      //******Affichage du prix total******/
+      let productTotalPrice = document.getElementById("totalPrice") // on récupère l'élement HTML
+      productTotalPrice.innerHTML = totalProductPrice;// on rempli l'element html
+      //*************on affiche la quantité totale************/
       let productTotalQuantity = document.getElementById("totalQuantity");
       productTotalQuantity.textContent = totalProductArticle;
     })
@@ -127,12 +128,11 @@ if (articlesStorage === null) {
 };
 }
      
-  //--------------Modification des quantités via l'input---------------------
+  //**************Modification des quantités via l'input*******************
 
       //---on configure la fonction de modification des qtt
 
 function priceChange(e) {
-
   const inputTarget = e.target; // variable pour "viser" l'input
   let update = inputTarget.closest(".cart__item");// variable pour remonter au parent correspondant à l'input
   updateAll(update, "update", e.target.value);// on relie à la fonction "usine"
@@ -220,7 +220,7 @@ let updateAll = (element, type, value) =>{
     }
   }
 };
-//----fonction en cas de panier vide----
+//********fonction en cas de panier vide************
 function emptyCart() {
   let text = document.createElement("p"); // création variable text qui crée un élément p en HTML
   text.innerHTML = "Panier vide !"; // text prend la valeur HTML voulue
@@ -246,20 +246,20 @@ let adresseRegExp = new RegExp(
 let emailRegExp = new RegExp(
   "^[a-zA-Z0-9.-_]{2,}[@]{1}[a-zA-Z0-9.-_]{2,}[.]{1}[a-z]{2,5}$"
 );
-
+//***************************************************/
 //***********L'envoie du Formulaire******************/
 let order = document.getElementById("order");
 order.addEventListener("click", postOrder = (e) =>{
 
  e.preventDefault();
- //---------récupérations des infos produits dans un tableau------------------
+ //*********************récupérations des infos produits dans un tableau************
   let products = [];
 
     for(let article of articlesStorage){
       let id = article.id;
       products.push(id);
     }
-    //------------création d'un objet contact contenant les informations utilisateur-------------
+    //**************création d'un objet contact contenant les informations utilisateur***************
     let contact = {};
 
 let firstName = document.getElementById("firstName")//selectionner l'input prénom
@@ -274,7 +274,7 @@ let erroraddress = document.getElementById("addressErrorMsg")
 let errorcity = document.getElementById("cityErrorMsg")
 let erroremail = document.getElementById("emailErrorMsg")
 
-//implantation du RegExp à l'input correspondant via conditions IF/ELSE
+//***************implantation du RegExp à l'input correspondant via conditions IF/ELSE***************
 if(PrenomNomVilleRegExp.test(firstName.value)){
   errorfirstName.innerHTML = "Formulaire valide!"
   errorfirstName.setAttribute("style", "color:#11D01F");
