@@ -16,7 +16,7 @@ if (articlesStorage === null) {
          for (let article of articlesStorage){ 
     let id = article.id // on crée la variable "id" relié a l'id de l'article dans le storage
 
-    //-----On se relie à l'api-------------------
+    //*******************On se relie à l'api en fonction de l'id produit dans le storage***************
     fetch(`http://localhost:3000/api/products/${id}`)
 
     .then((httpBodyResponse) => {
@@ -49,28 +49,27 @@ if (articlesStorage === null) {
            panier.appendChild(cartItemContent);
            cartItemContent.className = "cart__item__content";
 
-           //-----création d'une div dans cart__item__content --------
+           //-----création d'une div dans cart__item__content (la div précedente)--------
            let cartItemContentDescription = document.createElement("div");
            cartItemContent.appendChild(cartItemContentDescription);
            cartItemContentDescription.className = "cart__item__content__description";
 
-           //------création d'un h2 dans la div cart__item__content__description --------
+           //------création d'un h2 dans la div cart__item__content__description (la div précedente) pour le nom du produit--------
            let NomDuProduit = document.createElement("h2");
            cartItemContentDescription.appendChild(NomDuProduit);
            NomDuProduit.textContent = `${product.name}`; // on insère le nom du produit en tant que titre
 
-           //-----création d'un p dans la div cart__item__content__description ------
+           //-----création d'un p dans la div cart__item__content__description pour afficher la couleure choisie------
            let color = document.createElement("p");
            cartItemContentDescription.appendChild(color);
            color.textContent = `${article.color}`; // on insère la couleur stocké dans le localStorage
 
-           //----création d'un autre p pour le prix dans la div cart__item__content__description------
+           //----création d'un autre p pour le PRIX dans la div cart__item__content__description------
            let price = document.createElement("p");
            cartItemContentDescription.appendChild(price);
-           let getPriceTotal = product.price * article.quantity;
-          //  price.textContent = article.quantity * product.price + " €";// on calcule le prix en fonction de la quantité x le prix a l'unité
+           let getPriceTotal = product.price * article.quantity;  //*****prix a l'unité x quantité*****
           price.innerHTML = `<span class="price">${getPriceTotal}</span> €`
-          totalProductPrice = totalProductPrice + getPriceTotal;
+          totalProductPrice = totalProductPrice + getPriceTotal; 
 
             //-----création d'une div dans cart__item__content --------
            let cartItemContentSettings = document.createElement("div");
@@ -82,42 +81,43 @@ if (articlesStorage === null) {
            cartItemContentSettings.appendChild(cartItemContentSettingsQuantity);
            cartItemContentSettingsQuantity.className = "cart__item__content__settings__quantity";
 
-           //-----création d'un p dans la div cart__item__content__settings__quantity ------
+           //-----création d'un p dans la div cart__item__content__settings__quantity pour la quantité d'article------
            let qtt = document.createElement("p");
            cartItemContentSettingsQuantity.appendChild(qtt);
-           qtt.textContent = "Qté : " //+ `${article.quantity}`; // on insère la couleur stocké dans le localStorage
+           qtt.textContent = "Qté : " 
 
-           //***********création d'un input dans la div cart__item__content__settings__quantity*******
+           //***********création d'un input dans la div cart__item__content__settings__quantity pour la Quantité*******
            let itemQuantity = document.createElement("input");
            cartItemContentSettingsQuantity.appendChild(itemQuantity);
 
-           itemQuantity.value = article.quantity;
+           itemQuantity.value = article.quantity; // la quantité affiché et celle dans le storage
            itemQuantity.type = "number";
            itemQuantity.className = "itemQuantity";
            itemQuantity.min = "1";
            itemQuantity.max = "100";
            itemQuantity.name = "itemQuantity";
            totalProductArticle = totalProductArticle + article.quantity;
-
-            itemQuantity.addEventListener("change", priceChange); // création event onchange sur l'input du prix
+          //***********création event onchange sur l'input du prix*************
+            itemQuantity.addEventListener("change", priceChange); 
 
            //-----création d'une div dans cart__item__content__settings --------
            let cartItemContentSettingsDelete = document.createElement("div");
            cartItemContentSettings.appendChild(cartItemContentSettingsDelete);
            cartItemContentSettingsDelete.className = "cart__item__content__settings__delete";
 
-           //-----création d'un p dans la div cart__item__content__settings__delete----
+           //-----création d'un p dans la div cart__item__content__settings__delete pour Supprimer l'article----
            let deleteItem = document.createElement("p");
            cartItemContentSettingsDelete.appendChild(deleteItem);
            deleteItem.className = "deleteItem";
            deleteItem.textContent = "Supprimer";
-          
-           deleteItem.addEventListener("click", remove); // création event click sur le bouton Supprimer         
+          //***********création event click sur le bouton Supprimer*************
+           deleteItem.addEventListener("click", remove);         
     })
     .then (() => {
       //******Affichage du prix total******/
       let productTotalPrice = document.getElementById("totalPrice") // on récupère l'élement HTML
       productTotalPrice.innerHTML = totalProductPrice;// on rempli l'element html
+
       //*************on affiche la quantité totale************/
       let productTotalQuantity = document.getElementById("totalQuantity");
       productTotalQuantity.textContent = totalProductArticle;
@@ -135,7 +135,7 @@ if (articlesStorage === null) {
 function priceChange(e) {
   const inputTarget = e.target; // variable pour "viser" l'input
   let update = inputTarget.closest(".cart__item");// variable pour remonter au parent correspondant à l'input
-  updateAll(update, "update", e.target.value);// on relie à la fonction "usine"
+  updateAll(update, "update", e.target.value);//********on relie à la fonction "usine"*******
 };
 
   //---------------CREATION EVENEMENT "OnClick" POUR SUPPRIMER----------------
@@ -143,9 +143,9 @@ function priceChange(e) {
 function remove(e) {
   let removeTarget = e.target;
   let article = removeTarget.closest(".cart__item");
-  updateAll(article, "delete", 0); // on la relie à la fonction "usine"
+  updateAll(article, "delete", 0); //************on la relie à la fonction "usine"************
 };
-
+//***********************************************************************************************************************************/
 //*************Fonction "Usine" pour la MAJ prix/quantité regroupant tous les paramètres de modification des quantités**************/
 let updateAll = (element, type, value) =>{
   element.dataset.id === "";
@@ -153,22 +153,22 @@ let updateAll = (element, type, value) =>{
 
   //initialisation d'une var totalnombre à O
   let totalNombre = 0;
-  //---- On parcour le tableau de storage------
+  //**********On parcour le tableau de storage********
   for (let [i, article] of articlesStorage.entries()) {
     let id = article.id ;
-    //---- on cible l'article sélectionné via correspondance de l'id et la couleur-----
+    //************on cible l'article sélectionné via correspondance de l'id et la couleur***********
     if (element.dataset.id === article.id && element.dataset.color === article.color){
 
-      //On stock l'ancien prix
+      //******On stock l'ancien prix******
       let oldPrice = element.querySelector(".price").textContent;
       console.log(oldPrice);
 
-      //on remplace la quantité article par la nouvelle
-      article.quantity = parseInt(value);// on transforme la valeur de la quantité de string à number grace à parseinT
+      //*******on remplace la quantité article par la nouvelle*****
+      article.quantity = parseInt(value);//--------on transforme la valeur de la quantité de string à number grace à parseinT------
       totalProductArticle = article.quantity;
       localStorage.setItem("articles", JSON.stringify(articlesStorage));
 
-      //-----on se relie à l'api en fonction de l'id produit----
+      //************on se relie à l'api en fonction de l'id produit*****************
       fetch(`http://localhost:3000/api/products/${id}`)
       .then((httpBodyResponse) => {
         return httpBodyResponse.json(); //on transforme la reponse de l'api au format json
@@ -180,9 +180,10 @@ let updateAll = (element, type, value) =>{
         priceTotal.innerHTML = getPriceTotal;//on injecte le nouveau prix en html
         
 
-        //--calcule difference prix---
+        //******calcule difference prix entre l'ancienne et la nouvelle séléction**********
         let difference = getPriceTotal - parseInt(oldPrice);// avec parseinT on transforme la valeur de string vers nombre
-        //--calcule du total en fonction de la difference entre le total et l'ancien prix--
+
+        //*******calcule du total en fonction de la difference entre le total et l'ancien prix**************
         totalProductPrice = totalProductPrice + difference; // prix du total d'articles + la difference
         let productTotalPrice = document.getElementById("totalPrice");
         productTotalPrice.innerHTML = totalProductPrice;// on affiche le résultat en HTML
@@ -191,18 +192,19 @@ let updateAll = (element, type, value) =>{
         alert('error' + err); // en cas d'erreur le site renvoi un message d'alerte
       });   
     };
+
     //totalnombre prend la valeur de la quantité de l'article
     totalNombre = totalNombre + article.quantity
   };
   let totalQuantity = document.getElementById("totalQuantity");
   totalQuantity.innerHTML = totalNombre;// on injecte la quantité totale en html
 
-  //----si le le paramètre "type" de updateAll() est le meme que celui de remove()
+  //***********si le le paramètre "type" de updateAll() est le meme que celui de remove()*********
   if (type === "delete") {
     //---on parcour le tableau de storage---
     for (let [i, article] of articlesStorage.entries()) {
       console.log(i);
-      //-----on cherche l'article correspondant via l'id et la couleur---
+      //*********on cherche l'article correspondant via l'id et la couleur**********
       if (
         article.id === element.dataset.id && article.color === element.dataset.color
       ) {
@@ -214,7 +216,7 @@ let updateAll = (element, type, value) =>{
       }
       //si le tableau de storage est bien un tableau et qu'il est vide
       if (Array.isArray(articlesStorage) && articlesStorage.length === 0){
-        emptyCart();//on appelle la fonction "panier vide"
+        emptyCart();//on appelle la fonction "panier vide" (voir plus bas)
  
       }
     }
@@ -237,7 +239,7 @@ function emptyCart() {
 
 // le regExp permet de selectionner les carractères valides pour un input choisi
 
-let PrenomNomVilleRegExp = new RegExp(
+let PrenomNomVilleRegExp = new RegExp( //-------ici l'ensemble des caractères autorisées pour les formulaires de noms et de ville.
   "^[a-zA-Z -]{2,}$"
 );
 let adresseRegExp = new RegExp(
@@ -259,7 +261,7 @@ order.addEventListener("click", postOrder = (e) =>{
       let id = article.id;
       products.push(id);
     }
-    //**************création d'un objet contact contenant les informations utilisateur***************
+    //**************création d'un objet contact vide contenant les informations utilisateur***************
     let contact = {};
 
 let firstName = document.getElementById("firstName")//selectionner l'input prénom
@@ -275,12 +277,12 @@ let errorcity = document.getElementById("cityErrorMsg")
 let erroremail = document.getElementById("emailErrorMsg")
 
 //***************implantation du RegExp à l'input correspondant via conditions IF/ELSE***************
-if(PrenomNomVilleRegExp.test(firstName.value)){
+if(PrenomNomVilleRegExp.test(firstName.value)){ //*****Si le formulaire et correctement rempli, affichage d'une notification de validation*****/
   errorfirstName.innerHTML = "Formulaire valide!"
   errorfirstName.setAttribute("style", "color:#11D01F");
 }
 else{
-  errorfirstName.innerHTML = "Formulaire invalide!";
+  errorfirstName.innerHTML = "Formulaire invalide!";  //************si le formualaire est insorrectement rempli,  affichage d'une notification de correction********
   alert("votre formulaire n'est pas valide");
   return false;
 }
@@ -324,7 +326,7 @@ else{
   alert("votre formulaire n'est pas valide");
   return false;
 }
-
+//****l'objet contact se rempli avec les infos utilisateur**** */
 contact = {
   firstName: firstName.value,
   lastName: lastName.value,
@@ -334,7 +336,7 @@ contact = {
 };
 
 
-
+//*******création du bon de commande en fonction des informations récoltées***********
     fetch("http://localhost:3000/api/products/order", {
       method: "post",
       body: JSON.stringify({
@@ -354,7 +356,7 @@ contact = {
       .then((reponse) =>{
         console.log(reponse);
         let orderId = reponse.orderId;
-        location.href = `./confirmation.html?order=${orderId}`;
+        location.href = `./confirmation.html?order=${orderId}`; // création d'une url en fonction de l'id de commande
  
       })
       .catch(function (erreur) {

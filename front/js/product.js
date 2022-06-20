@@ -1,8 +1,8 @@
-var url = new URL(window.location.href); // je crée une nouvelle URL en fonction de l'id
+var url = new URL(window.location.href); //**********je crée une nouvelle URL en fonction de l'id**************
 var id = url.searchParams.get("id"); // je recupère l'id du produit
 console.log(id);
 
-fetch(`http://localhost:3000/api/products/${id}`) // se lier à l'api contenant les produits en inserant l'id produit dans l'url
+fetch(`http://localhost:3000/api/products/${id}`) // se lier à l'api contenant les infos produits en inserant l'id produit dans l'url
   .then((httpBodyResponse) => {
     return httpBodyResponse.json(); //on transforme la reponse de l'api au format json
   })
@@ -53,7 +53,7 @@ fetch(`http://localhost:3000/api/products/${id}`) // se lier à l'api contenant 
 
   addToCart.addEventListener('click', addPanier)  // création événement au click de l'élément html button
     
-    //----------------création fonction addPanier pour ajouter au panier------------
+    //*******************création fonction addPanier pour ajouter au panier********************
     function addPanier (e) { 
 
       //--------récupérations des options séléctionnées par l'utilisateur----------------
@@ -69,7 +69,7 @@ fetch(`http://localhost:3000/api/products/${id}`) // se lier à l'api contenant 
       let itemQuantity = document.getElementById("quantity");// on relie l'élément html input "quantity"
       let quantity = itemQuantity.value; // la quantité deviens celle choisi par l'utilisateur
       
-      //création de la variable "articles" comprenant les infos des articles séléctionnés
+      //***********************création de la variable "articles" comprenant les infos des articles séléctionnés*******************
       let articles = { 
         id: id,
         color: color,
@@ -81,21 +81,21 @@ fetch(`http://localhost:3000/api/products/${id}`) // se lier à l'api contenant 
       let articlesStorage = JSON.parse(localStorage.getItem("articles")); //On transforme les données JSON en objet JS
       console.table(articlesStorage);
 
-      //----------si le stockage ne contient rien------------
+      //*************si le stockage ne contient rien**********************
       if(articlesStorage === null) {  
         articlesStorage = []; // on crée un tableau vide
         articlesStorage.push(articles); // on ajoute au tableau les infos des articles séléctionnés
         localStorage.setItem("articles", JSON.stringify(articlesStorage)); //On ajoute le tableau au Local storage en le convertissant en JSON
       } 
 
-      //----------si il y à déja quelque chose dans le stockage-----------
+      //*****************si il y à déja quelque chose dans le stockage*********************
       else { 
         let find = false; // on defini une variable "find" sur false par défaut qui défini si oui ou non un article correspond dans le storage
 
         // on parcour le stockage
         for(let product of articlesStorage) { // on commence par itéré le tableau pour trouver un articles correspondant
 
-          //----------si il y à déja un article correspondant-------------
+          //********************si il y à déja un article correspondant**********************
           if(product.id === articles.id && product.color === articles.color) { 
             product.quantity = articles.quantity + product.quantity; // on ajoute la quantité demandée (qtt LocalStorage = qtt panier + qtt LocalStorage*init*) 
 
@@ -110,7 +110,7 @@ fetch(`http://localhost:3000/api/products/${id}`) // se lier à l'api contenant 
           };
         };
 
-        //----------si aucun article correspondant n'est trouvé-------------
+        //*****************si aucun article correspondant n'est trouvé**************
         if(find === false){ // si find toujours = false nous n'avons donc trouvé aucun article correspondant.
           articlesStorage.push(articles);
           localStorage.setItem("articles", JSON.stringify(articlesStorage));
