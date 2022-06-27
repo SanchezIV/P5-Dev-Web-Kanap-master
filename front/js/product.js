@@ -6,7 +6,7 @@ fetch(`http://localhost:3000/api/products/${id}`) // se lier à l'api contenant 
   .then((httpBodyResponse) => {
     return httpBodyResponse.json(); //on transforme la reponse de l'api au format json
   })
-  .then((product) => { // création fonction product permettant d'afficher les infos produits et le choix couleur/quantité
+  .then((product) => { //***************création fonction product permettant d'afficher les infos produits et le choix couleur/quantité****************
       console.log(product);
 
       //----Implentation de l'image du produit------------------
@@ -36,8 +36,8 @@ fetch(`http://localhost:3000/api/products/${id}`) // se lier à l'api contenant 
 
     for (let color of colors) { // initialisation de la boucle pour parcourir le array
         console.log(color);
-        let choix = document.createElement("option"); // création variable relié à l'élément html option (une option se crée pour chaque possibilité)
-        document.getElementById("colors").appendChild(choix); // création d'un "enfant"(option) à l'élément html select
+        let choix = document.createElement("option"); // création variable créant l'élément html "option" (une option se crée pour chaque possibilité)
+        document.getElementById("colors").appendChild(choix); // création d'un "enfant"(option) à l'élément html select (id colors)
         choix.value = color; // la valeur de l'enfant deviens celle choisie par l'utilisateur
         choix.innerHTML = color; // implantation html de la valeur choisie
     }
@@ -67,7 +67,7 @@ fetch(`http://localhost:3000/api/products/${id}`) // se lier à l'api contenant 
       };
       
       let itemQuantity = document.getElementById("quantity");// on relie l'élément html input "quantity"
-      let quantity = itemQuantity.value; // la quantité deviens celle choisi par l'utilisateur
+      let quantity = itemQuantity.value; // la quantité deviens celle choisie par l'utilisateur
       
       //***********************création de la variable "articles" comprenant les infos des articles séléctionnés*******************
       let articles = { 

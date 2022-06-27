@@ -278,51 +278,51 @@ let erroremail = document.getElementById("emailErrorMsg")
 
 //***************implantation du RegExp à l'input correspondant via conditions IF/ELSE***************
 if(PrenomNomVilleRegExp.test(firstName.value)){ //*****Si le formulaire et correctement rempli, affichage d'une notification de validation*****/
-  errorfirstName.innerHTML = "Formulaire valide!"
+  errorfirstName.innerHTML = "Prénom valide!"
   errorfirstName.setAttribute("style", "color:#11D01F");
 }
 else{
-  errorfirstName.innerHTML = "Formulaire invalide!";  //************si le formualaire est insorrectement rempli,  affichage d'une notification de correction********
+  errorfirstName.innerHTML = "Prénom invalide!";  //************si le formualaire est insorrectement rempli,  affichage d'une notification de correction********
   alert("votre formulaire n'est pas valide");
   return false;
 }
 
 if(PrenomNomVilleRegExp.test(lastName.value)){
-  errorlastName.innerHTML = "Formulaire valide!"
+  errorlastName.innerHTML = "Nom valide!"
   errorlastName.setAttribute("style", "color:#11D01F");
 }
 else{
-  errorlastName.innerHTML = "Formulaire invalide!";
+  errorlastName.innerHTML = "Nom invalide!";
   alert("votre formulaire n'est pas valide");
   return false;
 }
 
 if(adresseRegExp.test(address.value)){
-  erroraddress.innerHTML = "Formulaire valide!"
+  erroraddress.innerHTML = "Adresse valide!"
   erroraddress.setAttribute("style", "color:#11D01F");
 }
 else{
-  erroraddress.innerHTML = "Formulaire invalide!";
+  erroraddress.innerHTML = "Adresse invalide!";
   alert("votre formulaire n'est pas valide");
   return false;
 }
 
 if(PrenomNomVilleRegExp.test(city.value)){
-  errorcity.innerHTML = "Formulaire valide!"
+  errorcity.innerHTML = "Ville valide!"
   errorcity.setAttribute("style", "color:#11D01F");
 }
 else{
-  errorcity.innerHTML = "Formulaire invalide!";
+  errorcity.innerHTML = "Ville invalide!";
   alert("votre formulaire n'est pas valide");
   return false;
 }
 
 if(emailRegExp.test(email.value)){
-  erroremail.innerHTML = "Formulaire valide!"
+  erroremail.innerHTML = "Email valide!"
   erroremail.setAttribute("style", "color:#11D01F");
 }
 else{
-  erroremail.innerHTML = "Formulaire invalide!";
+  erroremail.innerHTML = "Email invalide!";
   alert("votre formulaire n'est pas valide");
   return false;
 }
